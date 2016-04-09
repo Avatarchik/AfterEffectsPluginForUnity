@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Foundation\PixelFormat.cpp">
+      <Filter>Foundaion</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\Misc.cpp">
+      <Filter>Foundaion</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureWriter\TextureWriter.cpp">
+      <Filter>TextureWriter</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice\GraphicsDeviceD3D9.cpp">
+      <Filter>GraphicsDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice\GraphicsDeviceD3D11.cpp">
+      <Filter>GraphicsDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice\GraphicsDeviceOpenGL.cpp">
+      <Filter>GraphicsDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice\GraphicsDevice.cpp">
+      <Filter>GraphicsDevice</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Foundation\Buffer.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Misc.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\PixelFormat.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Image.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureWriter\TextureWriter.h">
+      <Filter>TextureWriter</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsDevice\GraphicsDevice.h">
+      <Filter>GraphicsDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Foundation.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Foundaion">
+      <UniqueIdentifier>{28750fd5-a7a5-49f2-9f06-622265629d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TextureWriter">
+      <UniqueIdentifier>{a07c184f-71e6-4935-9fbc-fb7f1f7fbc38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GraphicsDevice">
+      <UniqueIdentifier>{01966748-da7d-40e1-b5a6-b2ac4d34186b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Foundation\ConvertKernel.ispc">
+      <Filter>Foundaion</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

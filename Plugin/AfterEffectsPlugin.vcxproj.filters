@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Foundation\PixelFormat.cpp">
+      <Filter>Foundaion</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation\Misc.cpp">
+      <Filter>Foundaion</Filter>
+    </ClCompile>
+    <ClCompile Include="AfterEffectsPlugin\AfterEffectsPlugin.cpp">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Foundation\Buffer.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Misc.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\PixelFormat.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Image.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation\Foundation.h">
+      <Filter>Foundaion</Filter>
+    </ClInclude>
+    <ClInclude Include="AfterEffectsPlugin\AfterEffectsPlugin.h">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Foundaion">
+      <UniqueIdentifier>{28750fd5-a7a5-49f2-9f06-622265629d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AfterEffectsPlugin">
+      <UniqueIdentifier>{9462a179-3515-4d09-93e4-a4ad5d9b299e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Foundation\ConvertKernel.ispc">
+      <Filter>Foundaion</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
