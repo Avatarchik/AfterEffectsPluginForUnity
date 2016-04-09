@@ -84,3 +84,15 @@ namespace utj {
     class ImageBase;
 }
 typedef utj::ImageBase aepImage;
+
+
+#ifdef utjWindows
+    typedef unsigned short PixelType;
+    #include <Windows.h>
+    #define _WINDOWS
+#endif
+#include <AE_Effect.h>
+#include <AE_EffectCB.h>
+#include <AE_Macros.h>
+#include <AE_EffectCBSuites.h>
+#include <AE_GeneralPlug.h>
