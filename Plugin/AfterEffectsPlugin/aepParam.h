@@ -4,16 +4,22 @@
 class aepParam
 {
 public:
-    aepParam();
+    aepParam(aepInstance *inst);
     ~aepParam();
 
-    const aepParamInfo& getInfo() const;
+    const std::string&  getName() const;
+    aepParamType        getType() const;
+
     void*               getDataPtr();
     void                getValue(void *dst);
     void                setValue(const void *src);
 
+    void                apply();
+
 private:
-    aepParamInfo m_info;
+    aepInstance *m_inst;
+    std::string m_name;
+    aepParamType m_type;
     union {
         aepBoolValue    m_bool;
         aepFloatValue   m_float;

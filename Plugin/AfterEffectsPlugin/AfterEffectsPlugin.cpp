@@ -34,8 +34,53 @@ aepCLinkage aepExport void aepUnloadModule(aepModule *mod)
     // do nothing
 }
 
+
+aepCLinkage aepExport aepInstance*  aepCreateInstance(aepModule *mod)
+{
+    if (!mod) { return nullptr; }
+    return mod->createInstance();
+}
+
+aepCLinkage aepExport void aepDestroyInstance(aepInstance *ins)
+{
+    delete ins;
+}
+
+aepCLinkage aepExport int aepGetNumParams(aepInstance *ins)
+{
+    if (!ins) { return 0; }
+    return ins->getNumParams();
+}
+aepCLinkage aepExport aepParam* aepGetParam(aepInstance *ins, int i)
+{
+    if (!ins) { return nullptr; }
+    return ins->getParam(i);
+}
+aepCLinkage aepExport aepParam* aepGetParamByName(aepInstance *ins, const char *name)
+{
+    if (!ins) { return nullptr; }
+    return ins->getParamByName(name);
+}
+
+aepCLinkage aepExport void aepGetParamInfo(aepParam *param, aepParamInfo *dst)
+{
+    if (!param) { return; }
+    dst->name = param->getName().c_str();
+    dst->type = param->getType();
+}
+aepCLinkage aepExport void aepGetParamValue(aepParam *param, void *value)
+{
+    if (!param) { return; }
+    param->getValue(value);
+}
+aepCLinkage aepExport void aepSetParamValue(aepParam *param, const void *value)
+{
+    if (!param) { return; }
+    param->setValue(value);
+}
+
 aepCLinkage aepExport void aepRender(aepInstance *ins)
 {
-    // todo
+    ins->render();
 }
 

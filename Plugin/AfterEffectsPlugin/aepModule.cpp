@@ -50,7 +50,12 @@ void aepModule::unload()
     }
 }
 
-void aepModule::render()
+aepInstance* aepModule::createInstance()
 {
-    //m_entrypoint(PF_Cmd_RENDER);
+    return new aepInstance(this);
+}
+
+aepEntryPoint aepModule::getEntryPoint()
+{
+    return m_entrypoint;
 }

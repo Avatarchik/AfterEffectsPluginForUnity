@@ -100,6 +100,7 @@ aepCLinkage aepExport void          aepDestroyInstance(aepInstance *ins);
 
 aepCLinkage aepExport int           aepGetNumParams(aepInstance *ins);
 aepCLinkage aepExport aepParam*     aepGetParam(aepInstance *ins, int i);
+aepCLinkage aepExport aepParam*     aepGetParamByName(aepInstance *ins, const char *name);
 aepCLinkage aepExport void          aepGetParamInfo(aepParam *param, aepParamInfo *dst);
 aepCLinkage aepExport void          aepGetParamValue(aepParam *param, void *value);
 aepCLinkage aepExport void          aepSetParamValue(aepParam *param, const void *value);
