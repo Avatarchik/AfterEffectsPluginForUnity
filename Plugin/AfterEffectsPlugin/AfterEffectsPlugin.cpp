@@ -75,8 +75,8 @@ aepCLinkage aepExport void aepSetParamValue(aepParam *param, const void *value)
     param->setValue(value);
 }
 
-aepCLinkage aepExport void aepRender(aepInstance *ins, aepLayer *dst)
+aepCLinkage aepExport void aepRender(aepInstance *ins, double time, int width, int height)
 {
-    ins->render();
+    ins->render(time, width, height);
 }
 

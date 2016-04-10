@@ -28,6 +28,8 @@ int main(int argc, char *argv[])
         }
     }
 
+    aepRender(inst, 0.0, 1980, 1080);
+
     aepDestroyInstance(inst);
     aepUnloadModule(mod);
 }

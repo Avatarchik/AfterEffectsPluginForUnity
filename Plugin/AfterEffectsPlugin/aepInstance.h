@@ -11,7 +11,7 @@ public:
     aepParam*   getParam(int i);
     aepParam*   getParamByName(const char *name);
 
-    void        render();
+    void        render(double time, int width, int height);
 
 public:
     // internal
@@ -26,6 +26,7 @@ private:
     aepModule       *m_module;
     aepEntryPoint   m_entrypoint;
     aepParams       m_params;
+    aepImageRGBAu8  m_result;
 
     PF_InData       m_pf_in;
     PF_OutData      m_pf_out;

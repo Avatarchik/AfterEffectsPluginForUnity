@@ -80,11 +80,6 @@
     #define twMaster
 #endif 
 
-namespace utj {
-    class ImageBase;
-}
-typedef utj::ImageBase aepImage;
-
 
 #ifdef utjWindows
     typedef unsigned short PixelType;

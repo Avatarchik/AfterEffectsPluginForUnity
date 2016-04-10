@@ -13,6 +13,7 @@ aepInstance::aepInstance(aepModule *mod)
     (void*&)m_pf_in.effect_ref = this;
     m_pf_in.inter = aepGetHostCallbacks();
     m_pf_in.utils = &aepGetUtilCallbacks();
+    m_pf_in.pica_basicP = &aepGetSPBasicSuite();
 
     callPF(PF_Cmd_GLOBAL_SETUP);
     callPF(PF_Cmd_PARAMS_SETUP);
@@ -44,8 +45,14 @@ aepParam* aepInstance::getParamByName(const char *name)
     return nullptr;
 }
 
-void aepInstance::render()
+void aepInstance::render(double time, int width, int height)
 {
+    m_result.resize(width, height);
+    m_pf_output.width = m_result.getWidth();
+    m_pf_output.height = m_result.getHeight();
+    m_pf_output.rowbytes = m_result.getPitch();
+    m_pf_output.data = (PF_PixelPtr)m_result.getData();
+
     callPF(PF_Cmd_FRAME_SETUP);
     callPF(PF_Cmd_RENDER);
     callPF(PF_Cmd_FRAME_SETDOWN);

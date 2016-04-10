@@ -2,6 +2,24 @@
 #include "aepInternal.h"
 
 
+template<class T> struct aepPixelTraits;
+template<> struct aepPixelTraits<PF_Pixel>
+{
+    typedef A_u_char elem_t;
+    typedef PF_IteratePixel8Func iter_t;
+};
+template<> struct aepPixelTraits<PF_Pixel16>
+{
+    typedef A_u_short elem_t;
+    typedef PF_IteratePixel16Func iter_t;
+};
+template<> struct aepPixelTraits<PF_PixelFloat>
+{
+    typedef PF_FpShort elem_t;
+    typedef PF_IteratePixelFloatFunc iter_t;
+};
+
+
 ////////////////////////////////////////////////////////////////
 // host callbacks
 ////////////////////////////////////////////////////////////////
@@ -107,27 +125,6 @@ static PF_Err pf_get_audio_data(
     return PF_Err_NONE;
 }
 
-PF_InteractCallbacks& aepGetHostCallbacks()
-{
-    static PF_InteractCallbacks s_host_cb;
-    if (!s_host_cb.checkout_param) {
-#define def(F) s_host_cb.F = pf_##F
-def(checkout_param);
-def(checkin_param);
-def(add_param);
-def(abort);
-def(progress);
-def(register_ui);
-def(checkout_layer_audio);
-def(checkin_layer_audio);
-def(get_audio_data);
-#undef def
-    }
-    return s_host_cb;
-}
-
-
-
 
 ////////////////////////////////////////////////////////////////
 // utility callbacks
@@ -144,24 +141,26 @@ static PF_Err pf_begin_sampling(
     return PF_Err_NONE;
 }
 
+template<class C>
 static PF_Err pf_subpixel_sample(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
     const PF_SampPB	*params,
-    PF_Pixel		*dst_pixel)
+    C		*dst_pixel)
 {
     auto ins = (aepInstance*)effect_ref;
     aepTrace("instance: %p", ins);
     return PF_Err_NONE;
 }
 
+template<class C>
 static PF_Err pf_area_sample(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
     const PF_SampPB	*params,
-    PF_Pixel		*dst_pixel)
+    C		*dst_pixel)
 {
     auto ins = (aepInstance*)effect_ref;
     aepTrace("instance: %p", ins);
@@ -236,9 +235,10 @@ static PF_Err pf_copy(
     return PF_Err_NONE;
 }
 
+template<class C>
 static PF_Err pf_fill(
     PF_ProgPtr		effect_ref,		/* reference from in_data	*/
-    const PF_Pixel	*color,
+    const C	*color,
     const PF_Rect	*dst_rect,		/* pass NULL for whole world */
     PF_EffectWorld	*world)
 {
@@ -260,20 +260,6 @@ static PF_Err pf_gaussian_kernel(
     return PF_Err_NONE;
 }
 
-static PF_Err pf_iterate(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld			*src,
-    const PF_Rect			*area,			/* pass NULL for all pixels */
-    void*					refcon,
-    PF_IteratePixel8Func	pix_fn,
-    PF_EffectWorld			*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
 static PF_Err pf_premultiply(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     A_long			forward,		/* TRUE means convert non-premul to premul, FALSE mean reverse */
@@ -284,10 +270,11 @@ static PF_Err pf_premultiply(
     return PF_Err_NONE;
 }
 
+template<class C>
 static PF_Err pf_premultiply_color(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_EffectWorld	*src,
-    const PF_Pixel	*color,			/* color to premultiply/unmultiply with */
+    const C	*color,			/* color to premultiply/unmultiply with */
     A_long			forward,		/* TRUE means convert non-premul to premul, FALSE mean reverse */
     PF_EffectWorld	*dst)
 {
@@ -316,38 +303,6 @@ static PF_Err pf_dispose_world(
     aepTrace("instance: %p", ins);
     return PF_Err_NONE;
 }
-
-static PF_Err pf_iterate_origin(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld			*src,
-    const PF_Rect			*area,			/* pass NULL for all pixels */
-    const PF_Point			*origin,
-    void*					refcon,
-    PF_IteratePixel8Func	pix_fn,
-    PF_EffectWorld			*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_iterate_lut(
-    PF_InData		*in_data,
-    A_long			progress_base,
-    A_long			progress_final,
-    PF_EffectWorld		*src,
-    const PF_Rect	*area,			/* pass NULL for all pixels */
-    A_u_char	*a_lut0,		/* pass NULL for identity */
-    A_u_char	*r_lut0,		/* pass NULL for identity */
-    A_u_char	*g_lut0,		/* pass NULL for identity */
-    A_u_char	*b_lut0,		/* pass NULL for identity */
-    PF_EffectWorld		*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
 
 static PF_Err pf_transfer_rect(
     PF_ProgPtr				effect_ref,
@@ -445,130 +400,11 @@ static A_u_longlong pf_host_get_handle_size(PF_Handle pf_handle)
     aepTrace("pf_handle: %p", pf_handle);
     return 0;
 }
-
-static PF_Err pf_iterate_origin_non_clip_src(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld			*src,
-    const PF_Rect			*area,
-    const PF_Point			*origin,
-    void*					refcon,
-    PF_IteratePixel8Func	pix_fn,
-    PF_EffectWorld			*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_iterate_generic(
-    A_long			iterationsL,						/* >> */		// can be PF_Iterations_ONCE_PER_PROCESSOR
-    void			*refconPV,							/* >> */
-    PF_Err (*fn_func)(void *refconPV,			/* >> */
-        A_long thread_indexL,		// only call abort and progress from thread_indexL == 0.
-        A_long i,
-        A_long iterationsL))		// never sends PF_Iterations_ONCE_PER_PROCESSOR
-{
-    aepTrace("iterationsL: %d", iterationsL);
-    return PF_Err_NONE;
-}
-
 static PF_Err pf_host_resize_handle(
     A_u_longlong		new_sizeL,		/* >> */
     PF_Handle			*handlePH)		/* <> Handle Value May Change */
 {
     aepTrace("new_sizeL: %u", (uint32_t)new_sizeL);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_subpixel_sample16(
-    PF_ProgPtr		effect_ref,		/* reference from in_data */
-    PF_Fixed		x,
-    PF_Fixed		y,
-    const PF_SampPB	*params,
-    PF_Pixel16		*dst_pixel)
-{
-    auto ins = (aepInstance*)effect_ref;
-    aepTrace("instance: %p", ins);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_area_sample16(
-    PF_ProgPtr		effect_ref,		/* reference from in_data */
-    PF_Fixed		x,
-    PF_Fixed		y,
-    const PF_SampPB	*params,
-    PF_Pixel16		*dst_pixel)
-{
-    auto ins = (aepInstance*)effect_ref;
-    aepTrace("instance: %p", ins);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_fill16(
-    PF_ProgPtr			effect_ref,		/* reference from in_data	*/
-    const PF_Pixel16	*color,
-    const PF_Rect		*dst_rect,		/* pass NULL for whole world */
-    PF_EffectWorld		*world)
-{
-    auto ins = (aepInstance*)effect_ref;
-    aepTrace("instance: %p", ins);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_premultiply_color16(
-    PF_ProgPtr		effect_ref,		/* reference from in_data */
-    PF_EffectWorld	*src,
-    const PF_Pixel16 *color,			/* color to premultiply/unmultiply with */
-    A_long			forward,		/* TRUE means convert non-premul to premul, FALSE mean reverse */
-    PF_EffectWorld	*dst)
-{
-    auto ins = (aepInstance*)effect_ref;
-    aepTrace("instance: %p", ins);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_iterate16(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld			*src,
-    const PF_Rect			*area,			/* pass NULL for all pixels */
-    void*					refcon,
-    PF_IteratePixel16Func	pix_fn,
-    PF_EffectWorld			*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_iterate_origin16(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld			*src,
-    const PF_Rect			*area,			/* pass NULL for all pixels */
-    const PF_Point			*origin,
-    void*					refcon,
-    PF_IteratePixel16Func	pix_fn,
-    PF_EffectWorld			*dst)
-{
-    aepTrace("in_data: %p", in_data);
-    return PF_Err_NONE;
-}
-
-static PF_Err pf_iterate_origin_non_clip_src16(
-    PF_InData				*in_data,
-    A_long					progress_base,
-    A_long					progress_final,
-    PF_EffectWorld				*src,
-    const PF_Rect			*area,
-    const PF_Point			*origin,
-    void*				refcon,
-    PF_IteratePixel16Func	pix_fn,
-    PF_EffectWorld				*dst)
-{
-    aepTrace("in_data: %p", in_data);
     return PF_Err_NONE;
 }
 
@@ -628,60 +464,244 @@ static A_FpLong pf_acos(A_FpLong a) { aepTrace2(); return acos(a); }
 // color callbacks
 ////////////////////////////////////////////////////////////////
 
-static PF_Err pf_RGBtoHLS(PF_ProgPtr effect_ref, PF_Pixel *rgb, PF_HLS_Pixel hls)
+// PF_Pixel, PF_Pixel16, PF_PixelFloat
+template<class PixelT>
+static PF_Err pf_RGBtoHLS(PF_ProgPtr effect_ref, PixelT *rgb, PF_HLS_Pixel hls)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_HLStoRGB(PF_ProgPtr effect_ref, PF_HLS_Pixel hls, PF_Pixel *rgb)
+template<class PixelT>
+static PF_Err pf_HLStoRGB(PF_ProgPtr effect_ref, PF_HLS_Pixel hls, PixelT *rgb)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_RGBtoYIQ(PF_ProgPtr effect_ref, PF_Pixel *rgb, PF_YIQ_Pixel yiq)
+template<class PixelT>
+static PF_Err pf_RGBtoYIQ(PF_ProgPtr effect_ref, PixelT *rgb, PF_YIQ_Pixel yiq)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_YIQtoRGB(PF_ProgPtr effect_ref, PF_YIQ_Pixel yiq, PF_Pixel *rgb)
+template<class PixelT>
+static PF_Err pf_YIQtoRGB(PF_ProgPtr effect_ref, PF_YIQ_Pixel yiq, PixelT *rgb)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_Luminance(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *lum100)
+template<class PixelT>
+static PF_Err pf_Luminance(PF_ProgPtr effect_ref, PixelT *rgb, A_long *lum100)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_Hue(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *hue)
+template<class PixelT>
+static PF_Err pf_Hue(PF_ProgPtr effect_ref, PixelT *rgb, A_long *hue)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_Lightness(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *lightness)
+template<class PixelT>
+static PF_Err pf_Lightness(PF_ProgPtr effect_ref, PixelT *rgb, A_long *lightness)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
-static PF_Err pf_Saturation(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *saturation)
+template<class PixelT>
+static PF_Err pf_Saturation(PF_ProgPtr effect_ref, PixelT *rgb, A_long *saturation)
 {
     aepTrace2();
     return PF_Err_NONE;
 }
 
+
+////////////////////////////////////////////////////////////////
+// iterate callbacks
+////////////////////////////////////////////////////////////////
+
+
+template<class PixelT>
+static PF_Err pf_iterate(
+    PF_InData		*in_data,
+    A_long			progress_base,
+    A_long			progress_final,
+    PF_EffectWorld	*src,
+    const PF_Rect	*area,			/* pass NULL for all pixels */
+    void*		refcon,
+    typename aepPixelTraits<PixelT>::iter_t pix_fn,
+    PF_EffectWorld	*dst)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+template<class PixelT>
+static PF_Err pf_iterate_origin(
+    PF_InData		*in_data,
+    A_long			progress_base,
+    A_long			progress_final,
+    PF_EffectWorld	*src,
+    const PF_Rect	*area,			/* pass NULL for all pixels */
+    const PF_Point	*origin,
+    void*		refcon,
+    typename aepPixelTraits<PixelT>::iter_t pix_fn,
+    PF_EffectWorld	*dst)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+template<class PixelT>
+static PF_Err pf_iterate_lut(
+    PF_InData		*in_data,
+    A_long			progress_base,
+    A_long			progress_final,
+    PF_EffectWorld	*src,
+    const PF_Rect	*area,			/* pass NULL for all pixels */
+    typename aepPixelTraits<PixelT>::elem_t	*a_lut0,		/* pass NULL for identity */
+    typename aepPixelTraits<PixelT>::elem_t	*r_lut0,		/* pass NULL for identity */
+    typename aepPixelTraits<PixelT>::elem_t	*g_lut0,		/* pass NULL for identity */
+    typename aepPixelTraits<PixelT>::elem_t	*b_lut0,		/* pass NULL for identity */
+    PF_EffectWorld	*dst)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+template<class PixelT>
+static PF_Err pf_iterate_origin_non_clip_src(
+    PF_InData		*in_data,
+    A_long			progress_base,
+    A_long			progress_final,
+    PF_EffectWorld	*src,
+    const PF_Rect	*area,
+    const PF_Point	*origin,
+    void*		refcon,
+    typename aepPixelTraits<PixelT>::iter_t pix_fn,
+    PF_EffectWorld	*dst)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_iterate_generic(
+    A_long			iterationsL,						/* >> */		// can be PF_Iterations_ONCE_PER_PROCESSOR
+    void			*refconPV,							/* >> */
+    PF_Err(*fn_func)(void *refconPV,			/* >> */
+        A_long thread_indexL,		// only call abort and progress from thread_indexL == 0.
+        A_long i,
+        A_long iterationsL))
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+////////////////////////////////////////////////////////////////
+// PICA callbacks
+////////////////////////////////////////////////////////////////
+
+static SPErr SPAcquireSuite(const char *name, int version, const void **suite)
+{
+    aepTrace("name: %s", name);
+
+    static std::map<std::string, std::vector<void*>> s_suites;
+    if (s_suites.empty()) {
+        s_suites["PF Handle Suite"] = { nullptr };
+        s_suites["PF ANSI Suite"] = { pf_atan, pf_atan2, pf_ceil, pf_cos, pf_exp, pf_fabs, pf_floor, pf_fmod, pf_hypot, pf_log, pf_log10, pf_pow, pf_sin, pf_sqrt, pf_tan, pf_sprintf, pf_strcpy, pf_asin, pf_acos };
+        s_suites["PF Pixel Data Suite"] = { nullptr };
+        s_suites["PF Color Suite"] = { pf_RGBtoHLS<PF_Pixel>, pf_HLStoRGB<PF_Pixel>, pf_RGBtoYIQ<PF_Pixel>, pf_YIQtoRGB<PF_Pixel>, pf_Luminance<PF_Pixel>, pf_Hue<PF_Pixel>, pf_Lightness<PF_Pixel>, pf_Saturation<PF_Pixel> };
+        s_suites["PF Color16 Suite"] = { pf_RGBtoHLS<PF_Pixel16>, pf_HLStoRGB<PF_Pixel16>, pf_RGBtoYIQ<PF_Pixel16>, pf_YIQtoRGB<PF_Pixel16>, pf_Luminance<PF_Pixel16>, pf_Hue<PF_Pixel16>, pf_Lightness<PF_Pixel16>, pf_Saturation<PF_Pixel16> };
+        s_suites["PF ColorFloat Suite"] = { pf_RGBtoHLS<PF_PixelFloat>, pf_HLStoRGB<PF_PixelFloat>, pf_RGBtoYIQ<PF_PixelFloat>, pf_YIQtoRGB<PF_PixelFloat>, pf_Luminance<PF_PixelFloat>, pf_Hue<PF_PixelFloat>, pf_Lightness<PF_PixelFloat>, pf_Saturation<PF_PixelFloat> };
+        s_suites["PF Batch Sampling Suite"] = { nullptr };
+        s_suites["PF Sampling8 Suite"] = { nullptr };
+        s_suites["PF Sampling16 Suite"] = { nullptr };
+        s_suites["PF SamplingFloat Suite"] = { nullptr };
+        s_suites["PF World Suite"] = { nullptr };
+        s_suites["PF Pixel Format Suite"] = { nullptr };
+        s_suites["PF World Suite"] = { nullptr };
+        s_suites["PF Iterate8 Suite"] = { pf_iterate<PF_Pixel>, pf_iterate_origin<PF_Pixel>, pf_iterate_lut<PF_Pixel>, pf_iterate_origin_non_clip_src<PF_Pixel>, pf_iterate_generic };
+        s_suites["PF iterate16 Suite"] = { pf_iterate<PF_Pixel16>, pf_iterate_origin<PF_Pixel16>, pf_iterate_lut<PF_Pixel16>, pf_iterate_origin_non_clip_src<PF_Pixel16>, pf_iterate_generic };
+        s_suites["PF iterateFloat Suite"] = { pf_iterate<PF_PixelFloat>, pf_iterate_origin<PF_PixelFloat>, pf_iterate_lut<PF_PixelFloat>, pf_iterate_origin_non_clip_src<PF_PixelFloat>, pf_iterate_generic };
+        s_suites["PF World Transform Suite"] = { nullptr };
+        s_suites["PF Fill Matte Suite"] = { nullptr };
+    }
+    auto i = s_suites.find(name);
+    if (i != s_suites.end()) {
+        *suite = &i->second[0];
+    }
+    return kSPNoError;
+}
+static SPErr SPReleaseSuite(const char *name, int version)
+{
+    aepTrace("name: %s", name);
+    return kSPNoError;
+}
+static SPBoolean SPIsEqual(const char *token1, const char *token2)
+{
+    aepTrace("token1: %s, token2: %s", token1, token2);
+    return 0;
+}
+static SPErr SPAllocateBlock(size_t size, void **block)
+{
+    aepTrace("size: %u", (uint32_t)size);
+    *block = malloc(size);
+    return kSPNoError;
+}
+static SPErr SPFreeBlock(void *block)
+{
+    aepTrace("block: %p", block);
+    free(block);
+    return kSPNoError;
+}
+static SPErr SPReallocateBlock(void *block, size_t newSize, void **newblock)
+{
+    aepTrace("block: %p, newSize", block, (uint32_t)newSize);
+    *newblock = realloc(block, newSize);
+    return kSPNoError;
+}
+static SPErr SPUndefined(void)
+{
+    aepTrace2();
+    return kSPNoError;
+}
+
+
+////////////////////////////////////////////////////////////////
+// interface
+////////////////////////////////////////////////////////////////
+
+PF_InteractCallbacks& aepGetHostCallbacks()
+{
+    static PF_InteractCallbacks s_host_cb;
+    if (!s_host_cb.checkout_param) {
+#define def(F) s_host_cb.F = pf_##F
+def(checkout_param);
+def(checkin_param);
+def(add_param);
+def(abort);
+def(progress);
+def(register_ui);
+def(checkout_layer_audio);
+def(checkin_layer_audio);
+def(get_audio_data);
+#undef def
+    }
+    return s_host_cb;
+}
 
 PF_UtilCallbacks& aepGetUtilCallbacks()
 {
     static PF_UtilCallbacks s_util_cb;
     if (!s_util_cb.begin_sampling) {
 #define def(F) s_util_cb.F = pf_##F
+#define def2(F1, F2) s_util_cb.F1 = F2
 def(begin_sampling);
 def(subpixel_sample);
 def(area_sample);
@@ -690,15 +710,15 @@ def(composite_rect);
 def(blend);
 def(convolve);
 def(copy);
-def(fill);
+def2(fill, pf_fill<PF_Pixel>);
 def(gaussian_kernel);
-def(iterate);
+def2(iterate, pf_iterate<PF_Pixel>);
 def(premultiply);
-def(premultiply_color);
+def2(premultiply_color, pf_premultiply_color<PF_Pixel>);
 def(new_world);
 def(dispose_world);
-def(iterate_origin);
-def(iterate_lut);
+def2(iterate_origin, pf_iterate_origin<PF_Pixel>);
+def2(iterate_lut, pf_iterate_lut<PF_Pixel>);
 def(transfer_rect);
 def(transform_world);
 def(host_new_handle);
@@ -709,16 +729,16 @@ def(get_callback_addr);
 def(app);
 def(get_platform_data);
 def(host_get_handle_size);
-def(iterate_origin_non_clip_src);
+def2(iterate_origin_non_clip_src, pf_iterate_origin_non_clip_src<PF_Pixel>);
 def(iterate_generic);
 def(host_resize_handle);
-def(subpixel_sample16);
-def(area_sample16);
-def(fill16);
-def(premultiply_color16);
-def(iterate16);
-def(iterate_origin16);
-def(iterate_origin_non_clip_src16);
+def2(subpixel_sample16, pf_subpixel_sample<PF_Pixel16>);
+def2(area_sample16, pf_area_sample<PF_Pixel16>);
+def2(fill16, pf_fill<PF_Pixel16>);
+def2(premultiply_color16, pf_premultiply_color<PF_Pixel16>);
+def2(iterate16, pf_iterate<PF_Pixel16>);
+def2(iterate_origin16, pf_iterate_origin<PF_Pixel16>);
+def2(iterate_origin_non_clip_src16, pf_iterate_origin_non_clip_src<PF_Pixel16>);
 def(get_pixel_data8);
 def(get_pixel_data16);
 #undef def
@@ -755,4 +775,21 @@ def(Saturation);
 #undef def
     }
     return s_util_cb;
+}
+
+SPBasicSuite& aepGetSPBasicSuite()
+{
+    static SPBasicSuite s_sp;
+    if (!s_sp.AcquireSuite) {
+#define def(F) s_sp.F = SP##F
+def(AcquireSuite);
+def(ReleaseSuite);
+def(IsEqual);
+def(AllocateBlock);
+def(FreeBlock);
+def(ReallocateBlock);
+def(Undefined);
+#undef def
+    }
+    return s_sp;
 }

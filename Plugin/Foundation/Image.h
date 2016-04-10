@@ -76,6 +76,7 @@ public:
 
     int                 getWidth() const { return m_width; }
     int                 getHeight() const { return m_height; }
+    int                 getPitch() const { return m_width * getPixelSize(); }
     virtual int         getPixelSize() const = 0;
     virtual PixelFormat getPixelType() const = 0;
 

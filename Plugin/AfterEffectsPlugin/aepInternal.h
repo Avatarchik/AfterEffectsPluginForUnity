@@ -11,8 +11,14 @@
     #define aepTrace(FMT, ...) 
     #define aepTrace2() 
 #endif
+
+typedef utj::ImageBase aepImage;
+typedef utj::ImageRGBAu8 aepImageRGBAu8;
+typedef utj::ImageIntrusiveRGBAu8 aepImageIntrusiveRGBA;
+
 PF_InteractCallbacks&   aepGetHostCallbacks();
 PF_UtilCallbacks&       aepGetUtilCallbacks();
+SPBasicSuite&           aepGetSPBasicSuite();
 
 #include "aepModule.h"
 #include "aepInstance.h"
