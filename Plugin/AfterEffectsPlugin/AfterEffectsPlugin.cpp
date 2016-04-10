@@ -1,9 +1,5 @@
 #include "pch.h"
-#include "Foundation.h"
-#include "AfterEffectsPlugin.h"
-#include "aepModule.h"
-#include "aepInstance.h"
-#include "aepParam.h"
+#include "aepInternal.h"
 
 namespace {
     typedef std::unique_ptr<aepModule> aepModulePtr;
@@ -65,21 +61,21 @@ aepCLinkage aepExport aepParam* aepGetParamByName(aepInstance *ins, const char *
 aepCLinkage aepExport void aepGetParamInfo(aepParam *param, aepParamInfo *dst)
 {
     if (!param) { return; }
-    dst->name = param->getName().c_str();
+    dst->name = param->getName();
     dst->type = param->getType();
 }
 aepCLinkage aepExport void aepGetParamValue(aepParam *param, void *value)
 {
-    if (!param) { return; }
+    if (!param || !value) { return; }
     param->getValue(value);
 }
 aepCLinkage aepExport void aepSetParamValue(aepParam *param, const void *value)
 {
-    if (!param) { return; }
+    if (!param || !value) { return; }
     param->setValue(value);
 }
 
-aepCLinkage aepExport void aepRender(aepInstance *ins)
+aepCLinkage aepExport void aepRender(aepInstance *ins, aepLayer *dst)
 {
     ins->render();
 }

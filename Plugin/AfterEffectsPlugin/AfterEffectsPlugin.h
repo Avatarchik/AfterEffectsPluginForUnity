@@ -23,15 +23,15 @@ class aepParam;
 
 struct aepPoint2D
 {
-    float x, y;
+    int x, y;
     aepPoint2D() : x(), y() {}
-    aepPoint2D(float _x, float _y) : x(_x), y(_y) {}
+    aepPoint2D(int _x, int _y) : x(_x), y(_y) {}
 };
 struct aepPoint3D
 {
-    float x, y, z;
+    double x, y, z;
     aepPoint3D() : x(), y(), z() {}
-    aepPoint3D(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+    aepPoint3D(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 };
 struct aepColor
 {
@@ -71,9 +71,9 @@ struct aepBoolValue
 {
     bool value, def;
 };
-struct aepFloatValue
+struct aepIntValue
 {
-    float value, def, min, max;
+    int value, def, min, max;
 };
 struct aepPoint2DValue
 {
@@ -105,6 +105,6 @@ aepCLinkage aepExport void          aepGetParamInfo(aepParam *param, aepParamInf
 aepCLinkage aepExport void          aepGetParamValue(aepParam *param, void *value);
 aepCLinkage aepExport void          aepSetParamValue(aepParam *param, const void *value);
 
-aepCLinkage aepExport void          aepRender(aepInstance *ins);
+aepCLinkage aepExport void          aepRender(aepInstance *ins, aepLayer *dst);
 
 #endif // AfterEffectsPlugin_h

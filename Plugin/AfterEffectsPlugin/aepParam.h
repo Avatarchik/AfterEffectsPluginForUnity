@@ -6,8 +6,9 @@ class aepParam
 public:
     aepParam(aepInstance *inst);
     ~aepParam();
+    void                setup();
 
-    const std::string&  getName() const;
+    const char*         getName() const;
     aepParamType        getType() const;
 
     void*               getDataPtr();
@@ -16,18 +17,25 @@ public:
 
     void                apply();
 
+public:
+    // internal
+    PF_ParamDef&        getPFParamDef();
+    void                copyToPF();
+    void                copyFromPF();
+
 private:
     aepInstance *m_inst;
-    std::string m_name;
     aepParamType m_type;
     union {
         aepBoolValue    m_bool;
-        aepFloatValue   m_float;
+        aepIntValue   m_int;
         aepPoint2DValue m_point2d;
         aepPoint3DValue m_point3d;
         aepColorValue   m_color;
         aepLayerValue   m_layer;
     };
+
+    PF_ParamDef m_pf;
 };
 
 #endif // aepParam_h

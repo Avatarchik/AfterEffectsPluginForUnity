@@ -1,9 +1,5 @@
 #include "pch.h"
-#include "Foundation.h"
-#include "AfterEffectsPlugin.h"
-#include "aepModule.h"
-#include "aepInstance.h"
-#include "aepParam.h"
+#include "aepInternal.h"
 
 
 aepModule::aepModule()
