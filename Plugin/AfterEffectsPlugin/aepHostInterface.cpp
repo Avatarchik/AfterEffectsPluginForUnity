@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "aepInternal.h"
 
-namespace {
+
+////////////////////////////////////////////////////////////////
+// host callbacks
+////////////////////////////////////////////////////////////////
 
 PF_Err pf_checkout_param(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
@@ -32,6 +35,7 @@ PF_Err pf_add_param(
 {
     auto ins = (aepInstance*)effect_ref;
     aepTrace("instance: %p", ins);
+    ins->addParam(index, *def);
     return PF_Err_NONE;
 }
 
@@ -103,8 +107,6 @@ PF_Err pf_get_audio_data(
     return PF_Err_NONE;
 }
 
-} // namespace
-
 PF_InteractCallbacks& aepGetHostCallbacks()
 {
     static PF_InteractCallbacks s_host_cb;
@@ -127,7 +129,9 @@ def(get_audio_data);
 
 
 
-namespace {
+////////////////////////////////////////////////////////////////
+// utility callbacks
+////////////////////////////////////////////////////////////////
 
 PF_Err pf_begin_sampling(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
@@ -586,7 +590,39 @@ PF_Err pf_get_pixel_data16(
     return PF_Err_NONE;
 }
 
-} // namespace
+
+////////////////////////////////////////////////////////////////
+// ansi callbacks
+////////////////////////////////////////////////////////////////
+
+A_FpLong pf_atan(A_FpLong a) { aepTrace2(); return atan(a); }
+A_FpLong pf_atan2(A_FpLong y, A_FpLong x) { aepTrace2(); return atan2(y, x); }
+A_FpLong pf_ceil(A_FpLong a) { aepTrace2(); return ceil(a); }
+A_FpLong pf_cos(A_FpLong a) { aepTrace2(); return cos(a); }
+A_FpLong pf_exp(A_FpLong a) { aepTrace2(); return exp(a); }
+A_FpLong pf_fabs(A_FpLong a) { aepTrace2(); return fabs(a); }
+A_FpLong pf_floor(A_FpLong a) { aepTrace2(); return floor(a); }
+A_FpLong pf_fmod(A_FpLong x, A_FpLong y) { aepTrace2(); return fmod(x, y); }
+A_FpLong pf_hypot(A_FpLong x, A_FpLong y) { aepTrace2(); return hypot(x, y); }
+A_FpLong pf_log(A_FpLong a) { aepTrace2(); return log(a); }
+A_FpLong pf_log10(A_FpLong a) { aepTrace2(); return log10(a); }
+A_FpLong pf_pow(A_FpLong x, A_FpLong y) { aepTrace2(); return pow(x, y); }
+A_FpLong pf_sin(A_FpLong a) { aepTrace2(); return sin(a); }
+A_FpLong pf_sqrt(A_FpLong a) { aepTrace2(); return sqrt(a); }
+A_FpLong pf_tan(A_FpLong a) { aepTrace2(); return tan(a); }
+int pf_sprintf(A_char *buf, const A_char *fmt, ...)
+{
+    aepTrace2();
+    va_list vl;
+    va_start(vl, fmt);
+    int ret = vsprintf(buf, fmt, vl);
+    va_end(vl);
+    return ret;
+}
+A_char* pf_strcpy(A_char *a, const A_char *b) { aepTrace2(); return strcpy(a, b); }
+A_FpLong pf_asin(A_FpLong a) { aepTrace2(); return asin(a); }
+A_FpLong pf_acos(A_FpLong a) { aepTrace2(); return acos(a); }
+
 
 PF_UtilCallbacks& aepGetUtilCallbacks()
 {
@@ -633,7 +669,29 @@ def(iterate_origin_non_clip_src16);
 def(get_pixel_data8);
 def(get_pixel_data16);
 #undef def
-        //PF_ANSICallbacks	ansi;			/* ANSI callback block, see above */
+
+#define def(F) s_util_cb.ansi.F = pf_##F
+def(atan);
+def(atan2);
+def(ceil);
+def(cos);
+def(exp);
+def(fabs);
+def(floor);
+def(fmod);
+def(hypot);
+def(log);
+def(log10);
+def(pow);
+def(sin);
+def(sqrt);
+def(tan);
+def(sprintf);
+def(strcpy);
+def(asin);
+def(acos);
+#undef def
+
         //PF_ColorCallbacks	colorCB;		/* colorspace conversion callbacks */
     }
     return s_util_cb;

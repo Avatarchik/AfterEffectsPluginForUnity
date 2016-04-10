@@ -6,8 +6,10 @@
 
 #ifndef aepMaster
     #define aepTrace(FMT, ...) utjDebugLog(FMT "\n", __VA_ARGS__)
+    #define aepTrace2() utjDebugLog("\n")
 #else
     #define aepTrace(FMT, ...) 
+    #define aepTrace2() 
 #endif
 PF_InteractCallbacks&   aepGetHostCallbacks();
 PF_UtilCallbacks&       aepGetUtilCallbacks();

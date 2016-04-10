@@ -12,6 +12,22 @@ int main(int argc, char *argv[])
     }
 
     aepModule *mod = aepLoadModule(argv[1]);
+    if (!mod) {
+        printf("failed to load module: %s\n", argv[1]);
+    }
+    aepInstance *inst = aepCreateInstance(mod);
 
+    {
+        aepParamInfo info;
+        int nparams = aepGetNumParams(inst);
+        printf("params:\n");
+        for (int i = 0; i < nparams; ++i) {
+            aepParam *param = aepGetParam(inst, i);
+            aepGetParamInfo(param, &info);
+            printf("  %s (%d)\n", info.name, info.type);
+        }
+    }
+
+    aepDestroyInstance(inst);
     aepUnloadModule(mod);
 }

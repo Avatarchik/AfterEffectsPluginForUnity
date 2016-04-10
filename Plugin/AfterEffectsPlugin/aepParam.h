@@ -4,9 +4,8 @@
 class aepParam
 {
 public:
-    aepParam(aepInstance *inst);
+    aepParam(aepInstance *inst, const PF_ParamDef& pf);
     ~aepParam();
-    void                setup();
 
     const char*         getName() const;
     aepParamType        getType() const;
@@ -15,20 +14,18 @@ public:
     void                getValue(void *dst);
     void                setValue(const void *src);
 
-    void                apply();
-
 public:
     // internal
-    PF_ParamDef&        getPFParamDef();
-    void                copyToPF();
-    void                copyFromPF();
+    PF_ParamDef&        getPFParam();
+    void                setup(const PF_ParamDef& def);
 
 private:
     aepInstance *m_inst;
     aepParamType m_type;
     union {
         aepBoolValue    m_bool;
-        aepIntValue   m_int;
+        aepIntValue     m_int;
+        aepDoubleValue  m_double;
         aepPoint2DValue m_point2d;
         aepPoint3DValue m_point3d;
         aepColorValue   m_color;

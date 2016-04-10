@@ -35,9 +35,9 @@ struct aepPoint3D
 };
 struct aepColor
 {
-    unsigned char r, g, b, a;
-    aepColor() : r(), g(), b(), a() {}
-    aepColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) : r(_r), g(_g), b(_b), a(_a) {}
+    unsigned char a, r, g, b;
+    aepColor() : a(), r(), g(), b() {}
+    aepColor(unsigned char _a, unsigned char _r, unsigned char _g, unsigned char _b) : a(_a), r(_r), g(_g), b(_b) {}
 };
 struct aepLayer
 {
@@ -53,7 +53,8 @@ enum aepParamType
 {
     aepParamType_Unknown,
     aepParamType_Bool,
-    aepParamType_Float,
+    aepParamType_Int,
+    aepParamType_Double,
     aepParamType_Point2D,
     aepParamType_Point3D,
     aepParamType_Color,
@@ -74,6 +75,10 @@ struct aepBoolValue
 struct aepIntValue
 {
     int value, def, min, max;
+};
+struct aepDoubleValue
+{
+    double value, def, min, max;
 };
 struct aepPoint2DValue
 {

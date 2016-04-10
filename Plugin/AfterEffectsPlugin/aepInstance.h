@@ -15,12 +15,13 @@ public:
 
 public:
     // internal
-    aepParam*   addParam(int pos = -1);
+    aepParam*   addParam(int pos, const PF_ParamDef& pf);
+    void        callPF(int cmd);
 
 private:
-    typedef std::unique_ptr<aepParam> aepParamPtr;
-    typedef std::vector<aepParamPtr> aepParams;
-    typedef std::vector<PF_ParamDef*> PF_ParamDefs;
+    typedef std::unique_ptr<aepParam>   aepParamPtr;
+    typedef std::vector<aepParamPtr>    aepParams;
+    typedef std::vector<PF_ParamDef*>   PF_ParamDefs;
 
     aepModule       *m_module;
     aepEntryPoint   m_entrypoint;
