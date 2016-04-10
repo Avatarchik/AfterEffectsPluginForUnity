@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Foundation.h"
 #include "AfterEffectsPlugin.h"
-#include "aepInstance.h"
 #include "aepModule.h"
+#include "aepInstance.h"
+#include "aepParam.h"
 
 
 aepModule::aepModule()
@@ -47,4 +48,9 @@ void aepModule::unload()
         m_module = nullptr;
         m_entrypoint = nullptr;
     }
+}
+
+void aepModule::render()
+{
+    //m_entrypoint(PF_Cmd_RENDER);
 }

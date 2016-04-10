@@ -21,6 +21,8 @@ public:
     bool load(const char *path);
     void unload();
 
+    void render();
+
 private:
     utj::module_t m_module;
     aepEntryPoint m_entrypoint;

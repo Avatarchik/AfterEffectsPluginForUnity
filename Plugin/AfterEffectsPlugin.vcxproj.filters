@@ -17,6 +17,9 @@
     <ClCompile Include="AfterEffectsPlugin\aepModule.cpp">
       <Filter>AfterEffectsPlugin</Filter>
     </ClCompile>
+    <ClCompile Include="AfterEffectsPlugin\aepParam.cpp">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -42,6 +45,9 @@
       <Filter>AfterEffectsPlugin</Filter>
     </ClInclude>
     <ClInclude Include="AfterEffectsPlugin\aepInstance.h">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClInclude>
+    <ClInclude Include="AfterEffectsPlugin\aepParam.h">
       <Filter>AfterEffectsPlugin</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Foundation.h"
 #include "AfterEffectsPlugin.h"
-#include "aepInstance.h"
 #include "aepModule.h"
+#include "aepInstance.h"
+#include "aepParam.h"
 
 namespace {
     typedef std::unique_ptr<aepModule> aepModulePtr;
@@ -33,7 +34,7 @@ aepCLinkage aepExport void aepUnloadModule(aepModule *mod)
     // do nothing
 }
 
-aepCLinkage aepExport void aepRender(aepModule *mod)
+aepCLinkage aepExport void aepRender(aepInstance *ins)
 {
     // todo
 }
