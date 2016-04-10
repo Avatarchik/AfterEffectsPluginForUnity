@@ -10,4 +10,8 @@ int main(int argc, char *argv[])
         printf("usage: %s plugin_path\n", argv[0]);
         return 0;
     }
+
+    aepModule *mod = aepLoadModule(argv[1]);
+
+    aepUnloadModule(mod);
 }

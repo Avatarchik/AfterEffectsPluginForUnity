@@ -11,6 +11,12 @@
     <ClCompile Include="AfterEffectsPlugin\AfterEffectsPlugin.cpp">
       <Filter>AfterEffectsPlugin</Filter>
     </ClCompile>
+    <ClCompile Include="AfterEffectsPlugin\aepInstance.cpp">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClCompile>
+    <ClCompile Include="AfterEffectsPlugin\aepModule.cpp">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -30,6 +36,12 @@
       <Filter>Foundaion</Filter>
     </ClInclude>
     <ClInclude Include="AfterEffectsPlugin\AfterEffectsPlugin.h">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClInclude>
+    <ClInclude Include="AfterEffectsPlugin\aepModule.h">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClInclude>
+    <ClInclude Include="AfterEffectsPlugin\aepInstance.h">
       <Filter>AfterEffectsPlugin</Filter>
     </ClInclude>
   </ItemGroup>

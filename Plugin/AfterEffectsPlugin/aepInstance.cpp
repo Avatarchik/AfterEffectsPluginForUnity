@@ -1,0 +1,5 @@
+#include "pch.h"
+#include "Foundation.h"
+#include "AfterEffectsPlugin.h"
+#include "aepInstance.h"
+#include "aepModule.h"
