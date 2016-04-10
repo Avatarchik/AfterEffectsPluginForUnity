@@ -6,7 +6,7 @@
 // host callbacks
 ////////////////////////////////////////////////////////////////
 
-PF_Err pf_checkout_param(
+static PF_Err pf_checkout_param(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     PF_ParamIndex	index, 		/* 0 = input, 1..n = param */
     A_long			what_time,
@@ -19,7 +19,7 @@ PF_Err pf_checkout_param(
     return PF_Err_NONE;
 }
 
-PF_Err pf_checkin_param(
+static PF_Err pf_checkin_param(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     PF_ParamDef		*param)
 {
@@ -28,7 +28,7 @@ PF_Err pf_checkin_param(
     return PF_Err_NONE;
 }
 
-PF_Err pf_add_param(
+static PF_Err pf_add_param(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     PF_ParamIndex	index,		/* -1 = add to end */
     PF_ParamDefPtr	def)
@@ -39,7 +39,7 @@ PF_Err pf_add_param(
     return PF_Err_NONE;
 }
 
-PF_Err pf_abort(
+static PF_Err pf_abort(
     PF_ProgPtr		effect_ref)	/* reference from in_data */
 {
     auto ins = (aepInstance*)effect_ref;
@@ -47,7 +47,7 @@ PF_Err pf_abort(
     return PF_Err_NONE;
 }
 
-PF_Err pf_progress(
+static PF_Err pf_progress(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     A_long			current,
     A_long			total)
@@ -57,7 +57,7 @@ PF_Err pf_progress(
     return PF_Err_NONE;
 }
 
-PF_Err pf_register_ui(
+static PF_Err pf_register_ui(
     PF_ProgPtr			effect_ref,	/* reference from in_data	*/
     PF_CustomUIInfo		*cust_info)
 {
@@ -66,7 +66,7 @@ PF_Err pf_register_ui(
     return PF_Err_NONE;
 }
 
-PF_Err pf_checkout_layer_audio(
+static PF_Err pf_checkout_layer_audio(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     PF_ParamIndex	index, 		/* 0 = input, 1..n = param */
     A_long			start_time,	/* in time_scale units */
@@ -83,7 +83,7 @@ PF_Err pf_checkout_layer_audio(
     return PF_Err_NONE;
 }
 
-PF_Err pf_checkin_layer_audio(
+static PF_Err pf_checkin_layer_audio(
     PF_ProgPtr		effect_ref,	/* reference from in_data */
     PF_LayerAudio	audio)
 {
@@ -92,7 +92,7 @@ PF_Err pf_checkin_layer_audio(
     return PF_Err_NONE;
 }
 
-PF_Err pf_get_audio_data(
+static PF_Err pf_get_audio_data(
     PF_ProgPtr		effect_ref,			/* reference from in_data */
     PF_LayerAudio	audio,
     PF_SndSamplePtr	*data0,				/* optional - packed array of samples, if stereo, left/right */
@@ -133,7 +133,7 @@ def(get_audio_data);
 // utility callbacks
 ////////////////////////////////////////////////////////////////
 
-PF_Err pf_begin_sampling(
+static PF_Err pf_begin_sampling(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Quality		qual,
     PF_ModeFlags	mf,
@@ -144,7 +144,7 @@ PF_Err pf_begin_sampling(
     return PF_Err_NONE;
 }
 
-PF_Err pf_subpixel_sample(
+static PF_Err pf_subpixel_sample(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
@@ -156,7 +156,7 @@ PF_Err pf_subpixel_sample(
     return PF_Err_NONE;
 }
 
-PF_Err pf_area_sample(
+static PF_Err pf_area_sample(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
@@ -168,7 +168,7 @@ PF_Err pf_area_sample(
     return PF_Err_NONE;
 }
 
-PF_Err pf_end_sampling(
+static PF_Err pf_end_sampling(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Quality		qual,
     PF_ModeFlags	mf,
@@ -179,7 +179,7 @@ PF_Err pf_end_sampling(
     return PF_Err_NONE;
 }
 
-PF_Err pf_composite_rect(
+static PF_Err pf_composite_rect(
     PF_ProgPtr		effect_ref,		/* from in_data */
     PF_Rect			*src_rect,		/* rectangle in source image */
     A_long			src_opacity,	/* opacity of src */
@@ -195,7 +195,7 @@ PF_Err pf_composite_rect(
     return PF_Err_NONE;
 }
 
-PF_Err pf_blend(
+static PF_Err pf_blend(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     const PF_EffectWorld	*src1,
     const PF_EffectWorld	*src2,
@@ -207,7 +207,7 @@ PF_Err pf_blend(
     return PF_Err_NONE;
 }
 
-PF_Err pf_convolve(
+static PF_Err pf_convolve(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_EffectWorld	*src,
     const PF_Rect	*area,			/* pass NULL for all pixels */
@@ -224,7 +224,7 @@ PF_Err pf_convolve(
     return PF_Err_NONE;
 }
 
-PF_Err pf_copy(
+static PF_Err pf_copy(
     PF_ProgPtr		effect_ref,		/* reference from in_data	*/
     PF_EffectWorld	*src,
     PF_EffectWorld	*dst,
@@ -236,7 +236,7 @@ PF_Err pf_copy(
     return PF_Err_NONE;
 }
 
-PF_Err pf_fill(
+static PF_Err pf_fill(
     PF_ProgPtr		effect_ref,		/* reference from in_data	*/
     const PF_Pixel	*color,
     const PF_Rect	*dst_rect,		/* pass NULL for whole world */
@@ -247,7 +247,7 @@ PF_Err pf_fill(
     return PF_Err_NONE;
 }
 
-PF_Err pf_gaussian_kernel(
+static PF_Err pf_gaussian_kernel(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     A_FpLong			kRadius,		/* desired gaussian radius */
     PF_KernelFlags	flags,			/* see kernel flags commented above */
@@ -260,7 +260,7 @@ PF_Err pf_gaussian_kernel(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate(
+static PF_Err pf_iterate(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -274,7 +274,7 @@ PF_Err pf_iterate(
     return PF_Err_NONE;
 }
 
-PF_Err pf_premultiply(
+static PF_Err pf_premultiply(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     A_long			forward,		/* TRUE means convert non-premul to premul, FALSE mean reverse */
     PF_EffectWorld	*dst)
@@ -284,7 +284,7 @@ PF_Err pf_premultiply(
     return PF_Err_NONE;
 }
 
-PF_Err pf_premultiply_color(
+static PF_Err pf_premultiply_color(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_EffectWorld	*src,
     const PF_Pixel	*color,			/* color to premultiply/unmultiply with */
@@ -296,7 +296,7 @@ PF_Err pf_premultiply_color(
     return PF_Err_NONE;
 }
 
-PF_Err pf_new_world(
+static PF_Err pf_new_world(
     PF_ProgPtr			effect_ref,		/* reference from in_data */
     A_long				width,
     A_long				height,
@@ -308,7 +308,7 @@ PF_Err pf_new_world(
     return PF_Err_NONE;
 }
 
-PF_Err pf_dispose_world(
+static PF_Err pf_dispose_world(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_EffectWorld		*world)
 {
@@ -317,7 +317,7 @@ PF_Err pf_dispose_world(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate_origin(
+static PF_Err pf_iterate_origin(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -332,7 +332,7 @@ PF_Err pf_iterate_origin(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate_lut(
+static PF_Err pf_iterate_lut(
     PF_InData		*in_data,
     A_long			progress_base,
     A_long			progress_final,
@@ -349,7 +349,7 @@ PF_Err pf_iterate_lut(
 }
 
 
-PF_Err pf_transfer_rect(
+static PF_Err pf_transfer_rect(
     PF_ProgPtr				effect_ref,
     PF_Quality				quality,
     PF_ModeFlags			m_flags,
@@ -367,7 +367,7 @@ PF_Err pf_transfer_rect(
     return PF_Err_NONE;
 }
 
-PF_Err pf_transform_world(
+static PF_Err pf_transform_world(
     PF_ProgPtr				effect_ref,
     PF_Quality				quality,
     PF_ModeFlags			m_flags,
@@ -388,29 +388,29 @@ PF_Err pf_transform_world(
 }
 
 
-PF_Handle pf_host_new_handle(A_u_longlong size)
+static PF_Handle pf_host_new_handle(A_u_longlong size)
 {
     aepTrace("size: %u", (uint32_t)size);
     return nullptr;
 }
 
-void* pf_host_lock_handle(PF_Handle pf_handle)
+static void* pf_host_lock_handle(PF_Handle pf_handle)
 {
     aepTrace("pf_handle: %p", pf_handle);
     return nullptr;
 }
 
-void pf_host_unlock_handle(PF_Handle pf_handle)
+static void pf_host_unlock_handle(PF_Handle pf_handle)
 {
     aepTrace("pf_handle: %p", pf_handle);
 }
 
-void pf_host_dispose_handle(PF_Handle pf_handle)
+static void pf_host_dispose_handle(PF_Handle pf_handle)
 {
     aepTrace("pf_handle: %p", pf_handle);
 }
 
-PF_Err pf_get_callback_addr(
+static PF_Err pf_get_callback_addr(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Quality		quality,
     PF_ModeFlags	mode_flags,
@@ -422,7 +422,7 @@ PF_Err pf_get_callback_addr(
     return PF_Err_NONE;
 }
 
-PF_Err pf_app(PF_ProgPtr effect_ref, A_long, ...)	/* application specific callback */
+static PF_Err pf_app(PF_ProgPtr effect_ref, A_long, ...)	/* application specific callback */
 {
     auto ins = (aepInstance*)effect_ref;
     aepTrace("instance: %p", ins);
@@ -430,7 +430,7 @@ PF_Err pf_app(PF_ProgPtr effect_ref, A_long, ...)	/* application specific callba
 }
 
 
-PF_Err pf_get_platform_data(
+static PF_Err pf_get_platform_data(
     PF_ProgPtr		effect_ref,
     PF_PlatDataID	which,
     void			*data)
@@ -440,13 +440,13 @@ PF_Err pf_get_platform_data(
     return PF_Err_NONE;
 }
 
-A_u_longlong pf_host_get_handle_size(PF_Handle pf_handle)
+static A_u_longlong pf_host_get_handle_size(PF_Handle pf_handle)
 {
     aepTrace("pf_handle: %p", pf_handle);
     return 0;
 }
 
-PF_Err pf_iterate_origin_non_clip_src(
+static PF_Err pf_iterate_origin_non_clip_src(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -461,7 +461,7 @@ PF_Err pf_iterate_origin_non_clip_src(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate_generic(
+static PF_Err pf_iterate_generic(
     A_long			iterationsL,						/* >> */		// can be PF_Iterations_ONCE_PER_PROCESSOR
     void			*refconPV,							/* >> */
     PF_Err (*fn_func)(void *refconPV,			/* >> */
@@ -473,7 +473,7 @@ PF_Err pf_iterate_generic(
     return PF_Err_NONE;
 }
 
-PF_Err pf_host_resize_handle(
+static PF_Err pf_host_resize_handle(
     A_u_longlong		new_sizeL,		/* >> */
     PF_Handle			*handlePH)		/* <> Handle Value May Change */
 {
@@ -481,7 +481,7 @@ PF_Err pf_host_resize_handle(
     return PF_Err_NONE;
 }
 
-PF_Err pf_subpixel_sample16(
+static PF_Err pf_subpixel_sample16(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
@@ -493,7 +493,7 @@ PF_Err pf_subpixel_sample16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_area_sample16(
+static PF_Err pf_area_sample16(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_Fixed		x,
     PF_Fixed		y,
@@ -505,7 +505,7 @@ PF_Err pf_area_sample16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_fill16(
+static PF_Err pf_fill16(
     PF_ProgPtr			effect_ref,		/* reference from in_data	*/
     const PF_Pixel16	*color,
     const PF_Rect		*dst_rect,		/* pass NULL for whole world */
@@ -516,7 +516,7 @@ PF_Err pf_fill16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_premultiply_color16(
+static PF_Err pf_premultiply_color16(
     PF_ProgPtr		effect_ref,		/* reference from in_data */
     PF_EffectWorld	*src,
     const PF_Pixel16 *color,			/* color to premultiply/unmultiply with */
@@ -528,7 +528,7 @@ PF_Err pf_premultiply_color16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate16(
+static PF_Err pf_iterate16(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -542,7 +542,7 @@ PF_Err pf_iterate16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate_origin16(
+static PF_Err pf_iterate_origin16(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -557,7 +557,7 @@ PF_Err pf_iterate_origin16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_iterate_origin_non_clip_src16(
+static PF_Err pf_iterate_origin_non_clip_src16(
     PF_InData				*in_data,
     A_long					progress_base,
     A_long					progress_final,
@@ -572,7 +572,7 @@ PF_Err pf_iterate_origin_non_clip_src16(
     return PF_Err_NONE;
 }
 
-PF_Err pf_get_pixel_data8(
+static PF_Err pf_get_pixel_data8(
     PF_EffectWorld	*worldP,
     PF_PixelPtr		pixelsP0,		// NULL to use data in PF_EffectWorld
     PF_Pixel8		**pixPP)		// will return NULL if depth mismatch
@@ -581,7 +581,7 @@ PF_Err pf_get_pixel_data8(
     return PF_Err_NONE;
 }
 
-PF_Err pf_get_pixel_data16(
+static PF_Err pf_get_pixel_data16(
     PF_EffectWorld	*worldP,
     PF_PixelPtr		pixelsP0,		// NULL to use data in PF_EffectWorld
     PF_Pixel16		**pixPP)		// will return NULL if depth mismatch
@@ -595,22 +595,22 @@ PF_Err pf_get_pixel_data16(
 // ansi callbacks
 ////////////////////////////////////////////////////////////////
 
-A_FpLong pf_atan(A_FpLong a) { aepTrace2(); return atan(a); }
-A_FpLong pf_atan2(A_FpLong y, A_FpLong x) { aepTrace2(); return atan2(y, x); }
-A_FpLong pf_ceil(A_FpLong a) { aepTrace2(); return ceil(a); }
-A_FpLong pf_cos(A_FpLong a) { aepTrace2(); return cos(a); }
-A_FpLong pf_exp(A_FpLong a) { aepTrace2(); return exp(a); }
-A_FpLong pf_fabs(A_FpLong a) { aepTrace2(); return fabs(a); }
-A_FpLong pf_floor(A_FpLong a) { aepTrace2(); return floor(a); }
-A_FpLong pf_fmod(A_FpLong x, A_FpLong y) { aepTrace2(); return fmod(x, y); }
-A_FpLong pf_hypot(A_FpLong x, A_FpLong y) { aepTrace2(); return hypot(x, y); }
-A_FpLong pf_log(A_FpLong a) { aepTrace2(); return log(a); }
-A_FpLong pf_log10(A_FpLong a) { aepTrace2(); return log10(a); }
-A_FpLong pf_pow(A_FpLong x, A_FpLong y) { aepTrace2(); return pow(x, y); }
-A_FpLong pf_sin(A_FpLong a) { aepTrace2(); return sin(a); }
-A_FpLong pf_sqrt(A_FpLong a) { aepTrace2(); return sqrt(a); }
-A_FpLong pf_tan(A_FpLong a) { aepTrace2(); return tan(a); }
-int pf_sprintf(A_char *buf, const A_char *fmt, ...)
+static A_FpLong pf_atan(A_FpLong a) { aepTrace2(); return atan(a); }
+static A_FpLong pf_atan2(A_FpLong y, A_FpLong x) { aepTrace2(); return atan2(y, x); }
+static A_FpLong pf_ceil(A_FpLong a) { aepTrace2(); return ceil(a); }
+static A_FpLong pf_cos(A_FpLong a) { aepTrace2(); return cos(a); }
+static A_FpLong pf_exp(A_FpLong a) { aepTrace2(); return exp(a); }
+static A_FpLong pf_fabs(A_FpLong a) { aepTrace2(); return fabs(a); }
+static A_FpLong pf_floor(A_FpLong a) { aepTrace2(); return floor(a); }
+static A_FpLong pf_fmod(A_FpLong x, A_FpLong y) { aepTrace2(); return fmod(x, y); }
+static A_FpLong pf_hypot(A_FpLong x, A_FpLong y) { aepTrace2(); return hypot(x, y); }
+static A_FpLong pf_log(A_FpLong a) { aepTrace2(); return log(a); }
+static A_FpLong pf_log10(A_FpLong a) { aepTrace2(); return log10(a); }
+static A_FpLong pf_pow(A_FpLong x, A_FpLong y) { aepTrace2(); return pow(x, y); }
+static A_FpLong pf_sin(A_FpLong a) { aepTrace2(); return sin(a); }
+static A_FpLong pf_sqrt(A_FpLong a) { aepTrace2(); return sqrt(a); }
+static A_FpLong pf_tan(A_FpLong a) { aepTrace2(); return tan(a); }
+static int pf_sprintf(A_char *buf, const A_char *fmt, ...)
 {
     aepTrace2();
     va_list vl;
@@ -619,9 +619,62 @@ int pf_sprintf(A_char *buf, const A_char *fmt, ...)
     va_end(vl);
     return ret;
 }
-A_char* pf_strcpy(A_char *a, const A_char *b) { aepTrace2(); return strcpy(a, b); }
-A_FpLong pf_asin(A_FpLong a) { aepTrace2(); return asin(a); }
-A_FpLong pf_acos(A_FpLong a) { aepTrace2(); return acos(a); }
+static A_char* pf_strcpy(A_char *a, const A_char *b) { aepTrace2(); return strcpy(a, b); }
+static A_FpLong pf_asin(A_FpLong a) { aepTrace2(); return asin(a); }
+static A_FpLong pf_acos(A_FpLong a) { aepTrace2(); return acos(a); }
+
+
+////////////////////////////////////////////////////////////////
+// color callbacks
+////////////////////////////////////////////////////////////////
+
+static PF_Err pf_RGBtoHLS(PF_ProgPtr effect_ref, PF_Pixel *rgb, PF_HLS_Pixel hls)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_HLStoRGB(PF_ProgPtr effect_ref, PF_HLS_Pixel hls, PF_Pixel *rgb)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_RGBtoYIQ(PF_ProgPtr effect_ref, PF_Pixel *rgb, PF_YIQ_Pixel yiq)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_YIQtoRGB(PF_ProgPtr effect_ref, PF_YIQ_Pixel yiq, PF_Pixel *rgb)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_Luminance(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *lum100)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_Hue(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *hue)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_Lightness(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *lightness)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
+
+static PF_Err pf_Saturation(PF_ProgPtr effect_ref, PF_Pixel *rgb, A_long *saturation)
+{
+    aepTrace2();
+    return PF_Err_NONE;
+}
 
 
 PF_UtilCallbacks& aepGetUtilCallbacks()
@@ -669,7 +722,6 @@ def(iterate_origin_non_clip_src16);
 def(get_pixel_data8);
 def(get_pixel_data16);
 #undef def
-
 #define def(F) s_util_cb.ansi.F = pf_##F
 def(atan);
 def(atan2);
@@ -691,8 +743,16 @@ def(strcpy);
 def(asin);
 def(acos);
 #undef def
-
-        //PF_ColorCallbacks	colorCB;		/* colorspace conversion callbacks */
+#define def(F) s_util_cb.colorCB.F = pf_##F
+def(RGBtoHLS);
+def(HLStoRGB);
+def(RGBtoYIQ);
+def(YIQtoRGB);
+def(Luminance);
+def(Hue);
+def(Lightness);
+def(Saturation);
+#undef def
     }
     return s_util_cb;
 }
