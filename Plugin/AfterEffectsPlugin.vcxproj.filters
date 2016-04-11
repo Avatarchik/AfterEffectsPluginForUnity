@@ -23,6 +23,9 @@
     <ClCompile Include="AfterEffectsPlugin\aepHostInterface.cpp">
       <Filter>AfterEffectsPlugin</Filter>
     </ClCompile>
+    <ClCompile Include="AfterEffectsPlugin\aepLayer.cpp">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -54,6 +57,9 @@
       <Filter>AfterEffectsPlugin</Filter>
     </ClInclude>
     <ClInclude Include="AfterEffectsPlugin\aepInternal.h">
+      <Filter>AfterEffectsPlugin</Filter>
+    </ClInclude>
+    <ClInclude Include="AfterEffectsPlugin\aepLayer.h">
       <Filter>AfterEffectsPlugin</Filter>
     </ClInclude>
   </ItemGroup>

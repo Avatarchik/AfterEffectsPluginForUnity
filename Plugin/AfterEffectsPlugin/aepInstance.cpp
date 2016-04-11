@@ -8,12 +8,19 @@ aepInstance::aepInstance(aepModule *mod)
 {
     memset(&m_pf_in, 0, sizeof(m_pf_out));
     memset(&m_pf_out, 0, sizeof(m_pf_in));
-    memset(&m_pf_output, 0, sizeof(m_pf_output));
 
     (void*&)m_pf_in.effect_ref = this;
     m_pf_in.inter = aepGetHostCallbacks();
     m_pf_in.utils = &aepGetUtilCallbacks();
     m_pf_in.pica_basicP = &aepGetSPBasicSuite();
+
+    {
+        PF_ParamDef def;
+        memset(&def, 0, sizeof(def));
+        strcpy(def.name, "Input");
+        def.param_type = PF_Param_LAYER;
+        addParam(0, def);
+    }
 
     callPF(PF_Cmd_GLOBAL_SETUP);
     callPF(PF_Cmd_PARAMS_SETUP);
@@ -45,22 +52,24 @@ aepParam* aepInstance::getParamByName(const char *name)
     return nullptr;
 }
 
-void aepInstance::render(double time, int width, int height)
+void aepInstance::setInput(aepLayer *inp)
 {
-    m_result.resize(width, height);
-    m_pf_output.width = m_result.getWidth();
-    m_pf_output.height = m_result.getHeight();
-    m_pf_output.rowbytes = m_result.getPitch();
-    m_pf_output.data = (PF_PixelPtr)m_result.getData();
+    getParam(0)->setValue(&inp);
+}
+
+aepLayer* aepInstance::render(double time, int width, int height)
+{
+    m_output.resize(width, height);
 
     callPF(PF_Cmd_FRAME_SETUP);
     callPF(PF_Cmd_RENDER);
     callPF(PF_Cmd_FRAME_SETDOWN);
+    return &m_output;
 }
 
 void aepInstance::callPF(int cmd)
 {
-    m_entrypoint(cmd, &m_pf_in, &m_pf_out, &m_pf_params[0], &m_pf_output, this);
+    m_entrypoint(cmd, &m_pf_in, &m_pf_out, &m_pf_params[0], &m_output.m_pf, this);
 }
 
 aepParam* aepInstance::addParam(int pos, const PF_ParamDef& pf)
@@ -74,7 +83,7 @@ aepParam* aepInstance::addParam(int pos, const PF_ParamDef& pf)
     }
     else {
         if (pos >= (int)m_params.size()) {
-            m_params.resize((size_t)pos);
+            m_params.resize((size_t)pos + 1);
         }
         m_params[pos] = aepParamPtr(param);
     }

@@ -16,6 +16,7 @@
     #define aepExport
 #endif
 
+class aepLayer;
 class aepModule;
 class aepInstance;
 class aepParam;
@@ -24,28 +25,19 @@ class aepParam;
 struct aepPoint2D
 {
     int x, y;
-    aepPoint2D() : x(), y() {}
-    aepPoint2D(int _x, int _y) : x(_x), y(_y) {}
 };
 struct aepPoint3D
 {
     double x, y, z;
-    aepPoint3D() : x(), y(), z() {}
-    aepPoint3D(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 };
 struct aepColor
 {
     unsigned char a, r, g, b;
-    aepColor() : a(), r(), g(), b() {}
-    aepColor(unsigned char _a, unsigned char _r, unsigned char _g, unsigned char _b) : a(_a), r(_r), g(_g), b(_b) {}
 };
-struct aepLayer
+struct aepLayerData
 {
     void *pixels;
     int width, height, rowbytes;
-
-    aepLayer() : pixels(), width(), height(), rowbytes() {}
-    aepLayer(void *p, int w, int h, int r) : pixels(p), width(w), height(h), rowbytes(r) {}
 };
 
 
@@ -58,8 +50,8 @@ enum aepParamType
     aepParamType_Point2D,
     aepParamType_Point3D,
     aepParamType_Color,
-    aepParamType_Path,
     aepParamType_Layer,
+    aepParamType_Path, // not supported yet
 };
 
 struct aepParamInfo
@@ -68,35 +60,39 @@ struct aepParamInfo
     aepParamType type;
 };
 
-struct aepBoolValue
+struct aepBoolParamValue
 {
     bool value, def;
 };
-struct aepIntValue
+struct aepIntParamValue
 {
     int value, def, min, max;
 };
-struct aepDoubleValue
+struct aepDoubleParamValue
 {
     double value, def, min, max;
 };
-struct aepPoint2DValue
+struct aepPoint2DParamValue
 {
     aepPoint2D value, def;
 };
-struct aepPoint3DValue
+struct aepPoint3DParamValue
 {
     aepPoint3D value, def;
 };
-struct aepColorValue
+struct aepColorParamValue
 {
     aepColor value, def;
 };
-struct aepLayerValue
+struct aepLayerParamValue
 {
-    aepLayer value;
+    aepLayer *value;
 };
 
+aepCLinkage aepExport aepLayer*     aepCreateLayer();
+aepCLinkage aepExport void          aepDestroyLayer(aepLayer *layer);
+aepCLinkage aepExport void          aepResizeLayer(aepLayer *layer, int width, int height);
+aepCLinkage aepExport void          aepGetLayerData(aepLayer *layer, aepLayerData *dst);
 
 aepCLinkage aepExport aepModule*    aepLoadModule(const char *path);
 aepCLinkage aepExport void          aepUnloadModule(aepModule *mod);
@@ -110,6 +106,7 @@ aepCLinkage aepExport void          aepGetParamInfo(aepParam *param, aepParamInf
 aepCLinkage aepExport void          aepGetParamValue(aepParam *param, void *value);
 aepCLinkage aepExport void          aepSetParamValue(aepParam *param, const void *value);
 
-aepCLinkage aepExport void          aepRender(aepInstance *ins, double time, int width, int height);
+aepCLinkage aepExport void          aepSetInput(aepInstance *ins, aepLayer *layer);
+aepCLinkage aepExport aepLayer*     aepRender(aepInstance *ins, double time, int width, int height);
 
 #endif // AfterEffectsPlugin_h

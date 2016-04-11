@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClCompile Include="AfterEffectsPlugin\aepHostInterface.cpp" />
     <ClCompile Include="AfterEffectsPlugin\aepInstance.cpp" />
+    <ClCompile Include="AfterEffectsPlugin\aepLayer.cpp" />
     <ClCompile Include="AfterEffectsPlugin\aepModule.cpp" />
     <ClCompile Include="AfterEffectsPlugin\aepParam.cpp" />
     <ClCompile Include="AfterEffectsPlugin\AfterEffectsPlugin.cpp" />
@@ -31,6 +32,7 @@
   <ItemGroup>
     <ClInclude Include="AfterEffectsPlugin\aepInstance.h" />
     <ClInclude Include="AfterEffectsPlugin\aepInternal.h" />
+    <ClInclude Include="AfterEffectsPlugin\aepLayer.h" />
     <ClInclude Include="AfterEffectsPlugin\aepModule.h" />
     <ClInclude Include="AfterEffectsPlugin\aepParam.h" />
     <ClInclude Include="AfterEffectsPlugin\AfterEffectsPlugin.h" />

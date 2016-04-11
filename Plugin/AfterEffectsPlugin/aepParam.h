@@ -23,14 +23,14 @@ private:
     aepInstance *m_inst;
     aepParamType m_type;
     union {
-        aepBoolValue    m_bool;
-        aepIntValue     m_int;
-        aepDoubleValue  m_double;
-        aepPoint2DValue m_point2d;
-        aepPoint3DValue m_point3d;
-        aepColorValue   m_color;
-        aepLayerValue   m_layer;
-    };
+        aepBoolParamValue    vbool;
+        aepIntParamValue     vint;
+        aepDoubleParamValue  vdouble;
+        aepPoint2DParamValue vpoint2d;
+        aepPoint3DParamValue vpoint3d;
+        aepColorParamValue   vcolor;
+        aepLayerParamValue   vlayer;
+    } m_data;
 
     PF_ParamDef m_pf;
 };

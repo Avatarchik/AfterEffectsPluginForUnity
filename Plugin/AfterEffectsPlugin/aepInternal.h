@@ -20,6 +20,7 @@ PF_InteractCallbacks&   aepGetHostCallbacks();
 PF_UtilCallbacks&       aepGetUtilCallbacks();
 SPBasicSuite&           aepGetSPBasicSuite();
 
+#include "aepLayer.h"
 #include "aepModule.h"
 #include "aepInstance.h"
 #include "aepParam.h"

@@ -1,12 +1,33 @@
 #include "pch.h"
 #include "aepInternal.h"
 
+
+aepCLinkage aepExport aepLayer* aepCreateLayer()
+{
+    return new aepLayer();
+}
+aepCLinkage aepExport void aepDestroyLayer(aepLayer *layer)
+{
+    delete layer;
+}
+aepCLinkage aepExport void aepResizeLayer(aepLayer *layer, int width, int height)
+{
+    if (!layer) { return; }
+    layer->resize(width, height);
+}
+aepCLinkage aepExport void aepGetLayerData(aepLayer *layer, aepLayerData *dst)
+{
+    if (!layer || !dst) { return; }
+    dst->width      = layer->getWidth();
+    dst->height     = layer->getHeight();
+    dst->rowbytes   = layer->getPitch();
+    dst->pixels     = layer->getData();
+}
+
 namespace {
     typedef std::unique_ptr<aepModule> aepModulePtr;
     std::map<std::string, aepModulePtr> g_modules;
 }
-
-
 
 aepCLinkage aepExport aepModule* aepLoadModule(const char *path)
 {
@@ -60,7 +81,7 @@ aepCLinkage aepExport aepParam* aepGetParamByName(aepInstance *ins, const char *
 
 aepCLinkage aepExport void aepGetParamInfo(aepParam *param, aepParamInfo *dst)
 {
-    if (!param) { return; }
+    if (!param || !dst) { return; }
     dst->name = param->getName();
     dst->type = param->getType();
 }
@@ -75,8 +96,15 @@ aepCLinkage aepExport void aepSetParamValue(aepParam *param, const void *value)
     param->setValue(value);
 }
 
-aepCLinkage aepExport void aepRender(aepInstance *ins, double time, int width, int height)
+aepCLinkage aepExport void aepSetInput(aepInstance *ins, aepLayer *layer)
 {
-    ins->render(time, width, height);
+    if (!ins) { return; }
+    ins->setInput(layer);
+}
+
+aepCLinkage aepExport aepLayer* aepRender(aepInstance *ins, double time, int width, int height)
+{
+    if (!ins) { return nullptr; }
+    return ins->render(time, width, height);
 }
 

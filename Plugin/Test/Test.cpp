@@ -28,8 +28,13 @@ int main(int argc, char *argv[])
         }
     }
 
+    aepLayer *input = aepCreateLayer();
+    aepResizeLayer(input, 1980, 1080);
+
+    aepSetInput(inst, input);
     aepRender(inst, 0.0, 1980, 1080);
 
+    aepDestroyLayer(input);
     aepDestroyInstance(inst);
     aepUnloadModule(mod);
 }
